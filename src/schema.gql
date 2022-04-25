@@ -3,6 +3,13 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input CreateNewsInput {
+  content: String!
+  imageUrl: String!
+  tags: [String!]!
+  title: String!
+}
+
 input CreateUserInput {
   firstName: String!
   lastName: String!
@@ -10,23 +17,44 @@ input CreateUserInput {
   username: String!
 }
 
+input EditNewsInput {
+  content: String
+  imageUrl: String
+  tags: [String!]
+  title: String
+}
+
 input EditUserInput {
   firstName: String
   lastName: String
+  news: [CreateNewsInput!]
   password: String
 }
 
 type Mutation {
+  createNews(data: CreateNewsInput!): News!
   createUser(data: CreateUserInput!): User!
+  deleteNews(_id: String!): News!
   deleteUser(_id: String!): User!
+  editNews(_id: String!, data: EditNewsInput!): News!
   editUser(_id: String!, data: EditUserInput!): User!
   login(password: String!, username: String!): String!
+}
+
+type News {
+  _id: ObjectId!
+  content: String!
+  imageUrl: String!
+  tags: [String!]!
+  title: String!
 }
 
 """Mongo object id scalar type"""
 scalar ObjectId
 
 type Query {
+  allNews: [News!]!
+  news(_id: String!): News!
   user(_id: String!): User!
   users: [User!]!
 }
@@ -35,6 +63,7 @@ type User {
   _id: ObjectId!
   firstName: String!
   lastName: String!
+  news: [News!]!
   password: String!
   username: String!
 }

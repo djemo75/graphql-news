@@ -2,39 +2,34 @@ import { ObjectType, Field } from 'type-graphql';
 import {
   prop as Prop,
   getModelForClass,
-  modelOptions,
   Severity,
+  modelOptions,
 } from '@typegoose/typegoose';
 import { ObjectId } from 'mongodb';
-import { News } from './news-entity';
 
 @modelOptions({ options: { allowMixed: Severity.ALLOW } })
 @ObjectType()
-export class User {
+export class News {
   @Field()
   readonly _id: ObjectId;
 
   @Prop({ required: true })
   @Field()
-  username: string;
+  title: string;
 
   @Prop({ required: true })
   @Field()
-  firstName: string;
+  content: string;
 
   @Prop({ required: true })
   @Field()
-  lastName: string;
+  imageUrl: string;
 
-  @Prop({ required: true })
-  @Field()
-  password: string;
-
-  @Field(() => [News])
+  @Field(() => [String])
   @Prop({ default: [] })
-  news?: News[];
+  tags?: String[];
 }
 
-export const UserModel = getModelForClass(User, {
+export const NewsModel = getModelForClass(News, {
   schemaOptions: { timestamps: true },
 });

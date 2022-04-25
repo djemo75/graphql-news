@@ -1,6 +1,6 @@
 import { MaxLength, MinLength } from 'class-validator';
 import { Field, InputType } from 'type-graphql';
-// import { GameInput } from "../game/game-arguments";
+import { CreateNewsInput } from '../news/news-arguments';
 
 @InputType()
 export class CreateUserInput {
@@ -35,6 +35,6 @@ export class EditUserInput {
   @MinLength(6)
   password?: string;
 
-  // @Field(type => [GameInput])
-  // games?: GameInput[]
+  @Field(() => [CreateNewsInput], { nullable: true })
+  news?: CreateNewsInput[];
 }

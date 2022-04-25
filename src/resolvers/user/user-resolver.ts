@@ -14,7 +14,12 @@ export class UserResolver {
 
   @Query(() => User)
   async user(@Arg('_id') _id: string): Promise<User> {
-    return await UserModel.findById(_id);
+    const user = await UserModel.findById(_id);
+    if (!user) {
+      throw new UserInputError('User not found!');
+    }
+
+    return user;
   }
 
   @Mutation(() => User)
