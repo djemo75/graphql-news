@@ -39,6 +39,7 @@ type Mutation {
   editNews(_id: String!, data: EditNewsInput!): News!
   editUser(_id: String!, data: EditUserInput!): User!
   login(password: String!, username: String!): String!
+  logout: String!
 }
 
 type News {

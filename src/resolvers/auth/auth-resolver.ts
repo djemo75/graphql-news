@@ -1,20 +1,14 @@
-import { Resolver, Query, Mutation, Args, Ctx } from 'type-graphql';
-import { User, UserModel } from '../../entities/user-entity';
+import { Resolver, Mutation, Args, Authorized, Ctx } from 'type-graphql';
+import { UserModel } from '../../entities/user-entity';
 import { LoginArguments } from './auth-arguments';
-import { UserInputError, AuthenticationError } from 'apollo-server-core';
+import { UserInputError } from 'apollo-server-core';
 import { comparePasswords } from '../../utils/passwordUtils';
 import { generateAccessToken } from '../../utils/tokenUtils';
+import { Context } from '../../interfaces/context';
+import { TokenBlackListModel } from '../../entities/token-blacklist-entity';
 
 @Resolver()
 export class AuthResolver {
-  //   @Query(returns => User)
-  //   async currentUser(@Ctx() ctx: Context):Promise<User> {
-  //     if(!ctx.user) {
-  //         throw new AuthenticationError('user_not_authenticated');
-  //     }
-  //     return await UserModel.findById(ctx.user._id)
-  //   }
-
   @Mutation(() => String)
   async login(@Args() { username, password }: LoginArguments): Promise<string> {
     const user = await UserModel.findOne({ username });
@@ -28,5 +22,15 @@ export class AuthResolver {
     }
 
     return generateAccessToken(user);
+  }
+
+  @Authorized()
+  @Mutation(() => String)
+  async logout(@Ctx() ctx: Context): Promise<string> {
+    console.log(ctx.accessToken);
+    const addedToken = new TokenBlackListModel({ token: ctx.accessToken });
+    await addedToken.save();
+
+    return 'You logged out successfully!';
   }
 }
