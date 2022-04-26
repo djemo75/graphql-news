@@ -27,7 +27,6 @@ export class AuthResolver {
   @Authorized()
   @Mutation(() => String)
   async logout(@Ctx() ctx: Context): Promise<string> {
-    console.log(ctx.accessToken);
     const addedToken = new TokenBlackListModel({ token: ctx.accessToken });
     await addedToken.save();
 
